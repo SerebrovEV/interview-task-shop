@@ -1,7 +1,9 @@
 package com.task.shop.user.dto;
 
-import java.math.BigDecimal;
+import lombok.Data;
 
+import java.math.BigDecimal;
+@Data
 public class UserDto {
     private Long id;
     private String userName;

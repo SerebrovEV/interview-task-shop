@@ -1,6 +1,7 @@
 package com.task.shop.user.controller;
 
 import com.task.shop.user.dto.UserDto;
+import com.task.shop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,23 +9,33 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
+
+    private final UserService userService;
+
     @PostMapping
     public ResponseEntity<UserDto> addUser(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok(userDto);
+        return ResponseEntity.ok(userService.addUser(userDto));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
-        return ResponseEntity.ok(new UserDto());
+        return ResponseEntity.ok(userService.getUser(id));
     }
 
-    @PatchMapping
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok(userDto);
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable Long id,
+                                              @RequestBody UserDto userDto) {
+        return ResponseEntity.ok(userService.updateUser(id, userDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping()
+    public ResponseEntity<UserDto> getUserByName(@RequestParam String name) {
+        return ResponseEntity.ok(userService.getByName(name));
     }
 }

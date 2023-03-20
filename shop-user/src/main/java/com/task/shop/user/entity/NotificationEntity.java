@@ -8,14 +8,17 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Table(name = "notifications")
 public class NotificationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+
     @CreationTimestamp
     private LocalDateTime createAt;
     private String text;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;

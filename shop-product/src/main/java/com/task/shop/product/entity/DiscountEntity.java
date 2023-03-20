@@ -7,6 +7,7 @@ import java.util.Collection;
 
 @Entity
 @Data
+@Table(name = "discounts")
 public class DiscountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

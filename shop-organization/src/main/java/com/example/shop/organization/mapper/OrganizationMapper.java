@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface OrganizationMapper {
+
     OrganizationDto entityToDto(OrganizationEntity organizationEntity);
     OrganizationEntity dtoToEntity (OrganizationDto organizationDto);
 }
