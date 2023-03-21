@@ -10,4 +10,5 @@ public class ProductDto {
     private String description;
     private Float price;
     private Integer amount;
+    private Long organizationId;
 }

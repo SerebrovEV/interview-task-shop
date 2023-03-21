@@ -1,5 +1,6 @@
 package com.task.shop.product.controller;
 
+import com.task.shop.product.dto.CommentDto;
 import com.task.shop.product.dto.DiscountDto;
 import com.task.shop.product.dto.ProductDto;
 import com.task.shop.product.dto.ProductListDto;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/product")
 public class ProductController {
 
 
@@ -50,11 +50,6 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
-    public ResponseEntity<ProductListDto> getAll() {
-        return ResponseEntity.ok(productService.getAllProduct());
-    }
-
     @PostMapping("/{productId}/discount")
     public ResponseEntity<DiscountDto> addDiscount(@PathVariable Long productId,
                                                    @RequestBody DiscountDto discountDto) {
@@ -67,4 +62,13 @@ public class ProductController {
                                                       @RequestBody DiscountDto discountDto) {
         return ResponseEntity.ok(discountService.updateDiscount(discId, discountDto));
     }
+
+    @PostMapping("/{productId}/comment")
+    public ResponseEntity<CommentDto> addComment(@PathVariable Long productId,
+                                                 @RequestBody CommentDto commentDto) {
+        return ResponseEntity.ok(commentService.addComment(productId, commentDto));
+    }
+
+
+
 }
