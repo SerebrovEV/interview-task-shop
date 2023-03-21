@@ -34,7 +34,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    //?????
+
     @GetMapping()
     public ResponseEntity<UserDto> getUserByName(@RequestParam String name) {
         return ResponseEntity.ok(userService.getByName(name));

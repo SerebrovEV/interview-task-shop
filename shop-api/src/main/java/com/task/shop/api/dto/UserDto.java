@@ -10,8 +10,6 @@ public class UserDto {
     private String userName;
     private String mail;
 
-    //??
-    private String password;
     private BigDecimal balance;
     private String role;
 }

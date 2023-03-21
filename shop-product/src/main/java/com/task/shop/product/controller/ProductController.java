@@ -69,6 +69,23 @@ public class ProductController {
         return ResponseEntity.ok(commentService.addComment(productId, commentDto));
     }
 
+    @DeleteMapping("/{productId}/comment/{commentId}")
+    public ResponseEntity<CommentDto> deleteProduct(@PathVariable Long productId,
+                                                    @PathVariable Long commentId) {
+        return ResponseEntity.ok(commentService.deleteComment(productId, commentId));
+    }
 
+    @PatchMapping("/{productId}/comment/{commentId}")
+    public ResponseEntity<CommentDto> updateComment(@PathVariable Long productId,
+                                                    @PathVariable Long commentId,
+                                                    @RequestBody CommentDto commentDto){
+        return ResponseEntity.ok(commentService.updateComment(productId, commentId, commentDto));
+    }
+
+    @GetMapping("/{productId}/comment/{commentId}")
+    public ResponseEntity<CommentDto> getComment(@PathVariable Long productId,
+                                                 @PathVariable Long commentId){
+        return ResponseEntity.ok(commentService.getComment(productId, commentId));
+    }
 
 }

@@ -22,7 +22,7 @@ public class UserController {
     private final ProductClient productClient;
 
     /**
-     * Запрос продута +
+     * Запрос продукта по id
      *
      * @return
      */
@@ -43,7 +43,7 @@ public class UserController {
     }
 
     /**
-     * Добавление товара в корзину ?
+     * Добавление товара в корзину -
      *
      * @param userId
      * @param productId
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     /**
-     * Удаление товара из корзины
+     * Удаление товара из корзины -
      *
      * @param userId
      * @param productId
@@ -69,7 +69,7 @@ public class UserController {
     }
 
     /**
-     * Оплата корзины
+     * Оплата корзины -
      *
      * @param userId
      * @param productId
@@ -82,7 +82,7 @@ public class UserController {
     }
 
     /**
-     * Добавление комментария к заказу
+     * Добавление комментария к заказу -
      *
      * @param productId
      * @return
@@ -94,7 +94,7 @@ public class UserController {
     }
 
     /**
-     * Получение комментария
+     * Получение комментария -
      *
      * @param productId
      * @param commentId
@@ -107,7 +107,7 @@ public class UserController {
     }
 
     /**
-     * Обновление комментария
+     * Обновление комментария -
      *
      * @param productId
      * @param commentId
@@ -122,7 +122,7 @@ public class UserController {
     }
 
     /**
-     * Удаление комментария
+     * Удаление комментария -
      *
      * @param productId
      * @param commentId
@@ -134,6 +134,11 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Добавление рейтинга продукции
+     * @param productId
+     * @return
+     */
     @PatchMapping("/product/{productId}")
     public ResponseEntity addRating(@PathVariable Long productId) {
         return ResponseEntity.ok().build();
@@ -152,6 +157,12 @@ public class UserController {
         return orderClient.getOrder(orderId);
     }
 
+    /**
+     * Возврат покупки
+     * @param userId
+     * @param orderId
+     * @return
+     */
     @PatchMapping("/user/{userId}/order/{orderId}")
     public ResponseEntity returnOrder(@PathVariable Long userId,
                                       @PathVariable Long orderId) {
@@ -183,7 +194,7 @@ public class UserController {
     }
 
     /**
-     * В работе
+     * Получение информации организации
      *
      * @param orgId
      * @param authentication
@@ -196,6 +207,13 @@ public class UserController {
         return ResponseEntity.ok(organizationClient.getOrganization(userId, orgId, authentication.getName()));
     }
 
+    /**
+     * Обновление информации об организации
+     * @param userId
+     * @param orgId
+     * @param organizationDto
+     * @return
+     */
     @PatchMapping("/user/{userId}/organization/{orgId}")
     public ResponseEntity<OrganizationDto> updateOrganization(@PathVariable Long userId,
                                                               @PathVariable Long orgId,
@@ -203,6 +221,11 @@ public class UserController {
         return ResponseEntity.ok(organizationClient.updateOrganization(userId, orgId, organizationDto));
     }
 
+    /**
+     * Удаление организации
+     * @param orgId
+     * @return
+     */
     @DeleteMapping("/user/organization/{orgId}")
     public ResponseEntity<OrganizationDto> deleteOrganization(@PathVariable Long orgId) {
         return null;

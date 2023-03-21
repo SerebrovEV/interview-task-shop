@@ -24,6 +24,11 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**+
+     * Контроллер для логирования пользователя
+     * @param req
+     * @return
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginReq req) {
         if (authService.login(req.getUsername(), req.getPassword())) {
@@ -33,6 +38,11 @@ public class AuthController {
         }
     }
 
+    /**
+     * Контроллер для регистрации пользователя
+     * @param req
+     * @return
+     */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterReq req) {
         Role role = req.getRole() == null ? USER : req.getRole();
