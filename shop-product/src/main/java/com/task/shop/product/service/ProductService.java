@@ -15,4 +15,5 @@ public interface ProductService {
 
     ProductListDto getAllProduct();
 
+    ProductDto addRating(Long productId, ProductDto productDto);
 }

@@ -19,6 +19,7 @@ public class AdminController {
     private final OrderClient orderClient;
     private final ProductClient productClient;
     private final UserClient userClient;
+
     /**
      * Админ может добавлять и изменять любую информацию о товарах в магазине +
      *
@@ -57,7 +58,7 @@ public class AdminController {
         return ResponseEntity.ok(productClient.updateDiscount(productId, discId, discountDto));
     }
 
-    /**
+    /**?????????
      * Админ может просмотреть историю покупок любого пользователя;+
      *
      * @param userId
@@ -65,9 +66,12 @@ public class AdminController {
      * @return
      */
     @GetMapping("/user/{userId}/order")
-    public ResponseEntity<OrderDto> getOrderByUserId(@PathVariable Long userId,
-                                                     @RequestParam(required = false) Long orderId) {
-        return ResponseEntity.ok(orderClient.getOrderByUser(userId, orderId).getBody());
+    public ResponseEntity getOrderByUserId(@PathVariable Long userId,
+                                           @RequestParam(required = false) Long orderId) {
+        if (orderId.equals(null)) {
+            return ResponseEntity.ok(orderClient.getAllOrder());
+        }
+        return ResponseEntity.ok(orderClient.getOrder(userId, orderId).getBody());
     }
 
     /**
@@ -146,6 +150,7 @@ public class AdminController {
 
     /**
      * Админ вправе удалять активные организации
+     *
      * @param orgId
      * @return
      */
@@ -156,6 +161,7 @@ public class AdminController {
 
     /**
      * Получение информации об организации
+     *
      * @param orgId
      * @return
      */
@@ -166,6 +172,7 @@ public class AdminController {
 
     /**
      * Изменение статуса продукта
+     *
      * @param orgId
      * @param productId
      * @param status
@@ -174,7 +181,7 @@ public class AdminController {
     @PatchMapping("/organization/{orgId}/product/{productId}/status")
     public ResponseEntity changeStatusProduct(@PathVariable Long orgId,
                                               @PathVariable Long productId,
-                                              @RequestParam Boolean status){
+                                              @RequestParam Boolean status) {
         return ResponseEntity.ok().build();
     }
 }

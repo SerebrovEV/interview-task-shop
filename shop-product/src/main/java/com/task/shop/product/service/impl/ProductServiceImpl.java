@@ -36,7 +36,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto getProduct(Long id) {
-
         return productMapper.entityToDto(getProductEntity(id));
     }
 
@@ -61,6 +60,13 @@ public class ProductServiceImpl implements ProductService {
         ProductListDto products = new ProductListDto();
         products.setProductsDto(productMapper.entityToDto(productRepository.findAll()));
         return products;
+    }
+
+    @Override
+    public ProductDto addRating(Long productId, ProductDto productDto) {
+        ProductEntity findProduct = getProductEntity(productId);
+        findProduct.setRating(productDto.getRating());
+        return productMapper.entityToDto(productRepository.save(findProduct));
     }
 
 }

@@ -5,6 +5,11 @@ import lombok.Data;
 @Data
 public class ProductDto {
 
-    private String name;
-
+    private Long id;
+    private String title;
+    private String description;
+    private Float price;
+    private Integer amount;
+    private Byte rating;
+    private Long organizationId;
 }

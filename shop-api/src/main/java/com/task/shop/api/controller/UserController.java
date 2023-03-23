@@ -82,32 +82,33 @@ public class UserController {
     }
 
     /**
-     * Добавление комментария к заказу -
+     * Добавление комментария к продукту + (добавить проверку на покупку)
      *
      * @param productId
      * @return
      */
     @PostMapping("/product/{productId}/comment")
-    public ResponseEntity addComment(@PathVariable Long productId,
-                                     @RequestBody CommentDto commentDto) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CommentDto> addComment(@PathVariable Long productId,
+                                                 @RequestBody CommentDto commentDto,
+                                                 Authentication authentication) {
+        return ResponseEntity.ok(productClient.addComment(productId, commentDto, authentication));
     }
 
     /**
-     * Получение комментария -
+     * Получение комментария +
      *
      * @param productId
      * @param commentId
      * @return
      */
     @GetMapping("/product/{productId}/comment/{commentId}")
-    public ResponseEntity getComment(@PathVariable Long productId,
-                                     @PathVariable CommentDto commentId) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CommentDto> getComment(@PathVariable Long productId,
+                                                 @PathVariable CommentDto commentId) {
+        return ResponseEntity.ok(productClient.getComment(productId, commentId));
     }
 
     /**
-     * Обновление комментария -
+     * Обновление комментария +
      *
      * @param productId
      * @param commentId
@@ -115,14 +116,15 @@ public class UserController {
      * @return
      */
     @PatchMapping("/product/{productId}/comment/{commentId}")
-    public ResponseEntity updateComment(@PathVariable Long productId,
-                                        @PathVariable Long commentId,
-                                        @RequestBody CommentDto commentDto) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CommentDto> updateComment(@PathVariable Long productId,
+                                                    @PathVariable Long commentId,
+                                                    @RequestBody CommentDto commentDto,
+                                                    Authentication authentication) {
+        return ResponseEntity.ok(productClient.updateCommentByUser(productId, commentId, commentDto, authentication));
     }
 
     /**
-     * Удаление комментария -
+     * Удаление комментария +
      *
      * @param productId
      * @param commentId
@@ -130,18 +132,22 @@ public class UserController {
      */
     @DeleteMapping("/product/{productId}/comment/{commentId}")
     public ResponseEntity deleteComment(@PathVariable Long productId,
-                                        @PathVariable Long commentId) {
+                                        @PathVariable Long commentId,
+                                        Authentication authentication) {
+        productClient.deleteCommentByUser(productId, commentId, authentication);
         return ResponseEntity.ok().build();
     }
 
     /**
-     * Добавление рейтинга продукции
+     * Добавление рейтинга продукции + (добавить проверку на покупку)
+     *
      * @param productId
      * @return
      */
-    @PatchMapping("/product/{productId}")
-    public ResponseEntity addRating(@PathVariable Long productId) {
-        return ResponseEntity.ok().build();
+    @PatchMapping("/product/{productId}/rating")
+    public ResponseEntity addRating(@PathVariable Long productId,
+                                    @RequestBody ProductDto productDto) {
+        return ResponseEntity.ok(productClient.addRating(productId, productDto));
     }
 
     /**
@@ -152,13 +158,19 @@ public class UserController {
      * @return
      */
     @GetMapping("/user/{userId}/order")
-    public ResponseEntity<OrderDto> getOrderById(@PathVariable Long userId,
-                                                 @RequestParam(required = false) Long orderId) {
-        return orderClient.getOrder(orderId);
+    public ResponseEntity getOrderById(@PathVariable Long userId,
+                                       @RequestParam(required = false) Long orderId,
+                                       Authentication authentication) {
+        if (orderId.equals(null)) {
+            return orderClient.getAllOrderByUser(userId, authentication);
+        } else {
+            return orderClient.getOrderByUser(userId, orderId, authentication);
+        }
     }
 
     /**
      * Возврат покупки
+     *
      * @param userId
      * @param orderId
      * @return
@@ -209,6 +221,7 @@ public class UserController {
 
     /**
      * Обновление информации об организации
+     *
      * @param userId
      * @param orgId
      * @param organizationDto
@@ -223,6 +236,7 @@ public class UserController {
 
     /**
      * Удаление организации
+     *
      * @param orgId
      * @return
      */
@@ -240,8 +254,8 @@ public class UserController {
      */
     @PostMapping("/organization/{orgId}/product")
     public ResponseEntity<ProductDto> addProduct(@PathVariable Long orgId,
-                                     @RequestBody ProductDto productDto) {
-         return organizationClient.addOrganizationProduct(orgId, productDto);
+                                                 @RequestBody ProductDto productDto) {
+        return organizationClient.addOrganizationProduct(orgId, productDto);
     }
 
 }

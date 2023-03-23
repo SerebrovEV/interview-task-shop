@@ -9,6 +9,7 @@ public class ProductDto {
     private String title;
     private String description;
     private Float price;
+    private Byte rating;
     private Integer amount;
     private Long organizationId;
 }

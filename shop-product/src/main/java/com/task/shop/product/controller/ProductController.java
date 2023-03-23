@@ -63,16 +63,18 @@ public class ProductController {
         return ResponseEntity.ok(discountService.updateDiscount(discId, discountDto));
     }
 
-    @PostMapping("/{productId}/comment")
+    @PostMapping("/{productId}/comment/")
     public ResponseEntity<CommentDto> addComment(@PathVariable Long productId,
                                                  @RequestBody CommentDto commentDto) {
         return ResponseEntity.ok(commentService.addComment(productId, commentDto));
     }
 
-    @DeleteMapping("/{productId}/comment/{commentId}")
-    public ResponseEntity<CommentDto> deleteProduct(@PathVariable Long productId,
-                                                    @PathVariable Long commentId) {
-        return ResponseEntity.ok(commentService.deleteComment(productId, commentId));
+    @DeleteMapping("/{productId}/comment/{commentId}/user/{userId}")
+    public ResponseEntity<Void> deleteCommentByUser(@PathVariable Long productId,
+                                                    @PathVariable Long commentId,
+                                                    @PathVariable Long userId) {
+        commentService.deleteComment(productId, commentId, userId);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{productId}/comment/{commentId}")
@@ -86,6 +88,12 @@ public class ProductController {
     public ResponseEntity<CommentDto> getComment(@PathVariable Long productId,
                                                  @PathVariable Long commentId){
         return ResponseEntity.ok(commentService.getComment(productId, commentId));
+    }
+
+    @PatchMapping("/{productId}/rating")
+    public ResponseEntity<ProductDto> addRatingForProduct(@PathVariable Long productId,
+                                                          @RequestBody ProductDto productDto){
+        return ResponseEntity.ok(productService.addRating(productId,productDto));
     }
 
 }
