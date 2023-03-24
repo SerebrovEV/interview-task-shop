@@ -162,7 +162,7 @@ public class UserController {
                                        @RequestParam(required = false) Long orderId,
                                        Authentication authentication) {
         if (orderId.equals(null)) {
-            return orderClient.getAllOrderByUser(userId, authentication);
+            return orderClient.getAllOrdersByUser(userId, authentication);
         } else {
             return orderClient.getOrderByUser(userId, orderId, authentication);
         }
@@ -206,20 +206,19 @@ public class UserController {
     }
 
     /**
-     * Получение информации организации
+     * Получение информации организации ++
      *
      * @param orgId
      * @param authentication
      * @return
      */
-    @GetMapping("/user/{userId}/organization/{orgId}")
-    public ResponseEntity<OrganizationDto> getOrganization(@PathVariable Long userId,
-                                                           @PathVariable Long orgId,
+    @GetMapping("/user/organization/{orgId}")
+    public ResponseEntity<OrganizationDto> getOrganization(@PathVariable Long orgId,
                                                            Authentication authentication) {
-        return ResponseEntity.ok(organizationClient.getOrganization(userId, orgId, authentication.getName()));
+        return ResponseEntity.ok(organizationClient.getOrganization(orgId, authentication));
     }
 
-    /**
+    /** в работе!!!!!!!!!!!!!!!
      * Обновление информации об организации
      *
      * @param userId

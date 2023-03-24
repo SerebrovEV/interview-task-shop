@@ -9,4 +9,5 @@ public class OrganizationDto {
     private String description;
     private String image;
     private Long userId;
+    private Boolean activeStatus;
 }

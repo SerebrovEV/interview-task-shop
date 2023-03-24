@@ -4,6 +4,6 @@ import lombok.Data;
 
 import java.util.List;
 @Data
-public class ProductListDto {
+public class ProductDtoList {
     List<ProductDto> productsDto;
 }

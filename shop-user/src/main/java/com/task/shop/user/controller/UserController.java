@@ -1,6 +1,8 @@
 package com.task.shop.user.controller;
 
+import com.task.shop.user.dto.NotificationDto;
 import com.task.shop.user.dto.UserDto;
+import com.task.shop.user.service.NotificationService;
 import com.task.shop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final NotificationService notificationService;
 
     @PostMapping
     public ResponseEntity<UserDto> addUser(@RequestBody UserDto userDto) {
@@ -50,5 +53,11 @@ public class UserController {
     public ResponseEntity<UserDto> updateUserStatus(@PathVariable Long userId,
                                                     @RequestBody UserDto userDto) {
         return ResponseEntity.ok(userService.updateUserStatus(userId, userDto));
+    }
+
+    @PostMapping("/user/{userId}/notification")
+    public ResponseEntity<NotificationDto> addNotificationForUser(@PathVariable Long userId,
+                                                                  @RequestBody NotificationDto notificationDto) {
+        return ResponseEntity.ok(notificationService.addNotification(userId, notificationDto));
     }
 }

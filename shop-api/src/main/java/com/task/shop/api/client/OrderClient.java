@@ -27,7 +27,7 @@ public class OrderClient {
 
     public ResponseEntity<OrderDto> getOrderByUser(Long userId, Long orderId, Authentication authentication) {
         UserDto userDto = userClient.getUserByName(authentication.getName());
-        if (userDto.getId().equals(userId)) {
+        if (userDto.getId().equals(userId) || userDto.getRole().equals("ADMIN")) {
             return ResponseEntity.ok(restTemplate.getForEntity(
                     uriOrder + orderId.toString() + "/user/" + userId,
                     OrderDto.class).getBody());
@@ -36,17 +36,11 @@ public class OrderClient {
         }
     }
 
-    public ResponseEntity<OrderDto> getOrder(Long userId, Long orderId) {
-        return ResponseEntity.ok(restTemplate.getForEntity(
-                uriOrder + orderId.toString() + "/user/" + userId,
-                OrderDto.class).getBody());
+    public OrderListDto getAllOrder() {
+        return restTemplate.getForEntity(uriOrder + "all", OrderListDto.class).getBody();
     }
 
-    public ResponseEntity<OrderListDto> getAllOrder() {
-        return restTemplate.getForEntity(uriOrder + "all", OrderListDto.class);
-    }
-
-    public ResponseEntity<OrderListDto> getAllOrderByUser(Long userId, Authentication authentication) {
+    public ResponseEntity<OrderListDto> getAllOrdersByUser(Long userId, Authentication authentication) {
         UserDto user = userClient.getUserByName(authentication.getName());
         if (user.getId().equals(userId) || user.getRole().equals("ADMIN")) {
             return restTemplate.getForEntity(uriOrder + userId.toString() + "all", OrderListDto.class);

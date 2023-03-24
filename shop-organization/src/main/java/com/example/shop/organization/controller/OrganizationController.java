@@ -34,4 +34,10 @@ public class OrganizationController {
                                                               @RequestBody OrganizationDto organizationDto) {
         return ResponseEntity.ok(organizationService.updateOrganization(orgId, organizationDto));
     }
+
+    @PatchMapping("/{orgId}/status")
+    public ResponseEntity<OrganizationDto> changeStatusOrganization(@PathVariable Long orgId,
+                                                                 @RequestBody OrganizationDto organizationDto) {
+        return ResponseEntity.ok(organizationService.changeStatus(orgId, organizationDto));
+    }
 }

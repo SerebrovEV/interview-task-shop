@@ -1,14 +1,14 @@
 package com.task.shop.api.controller;
 
 import com.task.shop.api.client.OrderClient;
+import com.task.shop.api.client.OrganizationClient;
 import com.task.shop.api.client.ProductClient;
 import com.task.shop.api.client.UserClient;
 import com.task.shop.api.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
 
 
 @RestController
@@ -19,6 +19,7 @@ public class AdminController {
     private final OrderClient orderClient;
     private final ProductClient productClient;
     private final UserClient userClient;
+    private final OrganizationClient organizationClient;
 
     /**
      * Админ может добавлять и изменять любую информацию о товарах в магазине +
@@ -33,15 +34,14 @@ public class AdminController {
     }
 
     /**
-     * Для товара или группы товаров админ может добавлять скидки +-
+     * Для товара или группы товаров админ может добавлять скидки +
      *
      * @param discountDto
      * @return
      */
-    @PostMapping("/product/{productId}/discount")
-    public ResponseEntity<DiscountDto> addDiscount(@RequestBody DiscountDto discountDto,
-                                                   @PathVariable String productId) {
-        return ResponseEntity.ok(productClient.addDiscount(productId, discountDto).getBody());
+    @PostMapping("/discount")
+    public ResponseEntity<DiscountDto> addDiscount(@RequestBody DiscountDto discountDto) {
+        return ResponseEntity.ok(productClient.addDiscount(discountDto).getBody());
     }
 
     /**
@@ -51,15 +51,20 @@ public class AdminController {
      * @param
      * @return
      */
-    @PatchMapping("/product/{productId}/discount/{discId}")
-    public ResponseEntity<DiscountDto> addDiscount(@RequestBody DiscountDto discountDto,
-                                                   @PathVariable Long productId,
-                                                   @PathVariable Long discId) {
-        return ResponseEntity.ok(productClient.updateDiscount(productId, discId, discountDto));
+    @PatchMapping("/discount/{discId}")
+    public ResponseEntity<DiscountDto> updateDiscount(@RequestBody DiscountDto discountDto,
+                                                      @PathVariable Long discId) {
+        return ResponseEntity.ok(productClient.updateDiscount(discId, discountDto));
     }
 
-    /**?????????
-     * Админ может просмотреть историю покупок любого пользователя;+
+    ///???????? в дискаунте
+    @PatchMapping("/product/discount")
+    public ResponseEntity<ProductDtoList> addDiscountForProduct(@RequestBody ProductDtoList productDtoList) {
+        return ResponseEntity.ok(productClient.addDiscountForProducts(productDtoList));
+    }
+
+    /**
+     * Админ может просмотреть историю покупок любого пользователя +
      *
      * @param userId
      * @param orderId
@@ -67,11 +72,22 @@ public class AdminController {
      */
     @GetMapping("/user/{userId}/order")
     public ResponseEntity getOrderByUserId(@PathVariable Long userId,
-                                           @RequestParam(required = false) Long orderId) {
-        if (orderId.equals(null)) {
-            return ResponseEntity.ok(orderClient.getAllOrder());
+                                           @RequestParam(required = false) Long orderId,
+                                           Authentication authentication) {
+        if (orderId == null) {
+            return ResponseEntity.ok(orderClient.getAllOrdersByUser(userId, authentication));
         }
-        return ResponseEntity.ok(orderClient.getOrder(userId, orderId).getBody());
+        return ResponseEntity.ok(orderClient.getOrderByUser(userId, orderId, authentication));
+    }
+
+    /**
+     * Админ может запросить все заказы +
+     *
+     * @return
+     */
+    @GetMapping("/orders")
+    public ResponseEntity<OrderListDto> getAllOrders() {
+        return ResponseEntity.ok(orderClient.getAllOrder());
     }
 
     /**
@@ -123,7 +139,7 @@ public class AdminController {
     }
 
     /**
-     * Админ может отправлять пользователю уведомления
+     * Админ может отправлять пользователю уведомления +
      *
      * @param userId
      * @param notificationDto
@@ -132,56 +148,44 @@ public class AdminController {
     @PostMapping("/user/{userId}/notification")
     public ResponseEntity<NotificationDto> sendNotification(@PathVariable Long userId,
                                                             @RequestBody NotificationDto notificationDto) {
-        return ResponseEntity.ok(notificationDto);
+        return ResponseEntity.ok(userClient.addNotification(userId, notificationDto));
     }
 
     /**
-     * Админ вправе принимать заявки на регистрацию организации, замораживать организации
+     * Админ вправе принимать заявки на регистрацию организации, замораживать организации +
      *
      * @param orgId
-     * @param status
+     * @param organizationDto
      * @return
      */
     @PatchMapping("/organization/{orgId}/status")
     public ResponseEntity<OrganizationDto> changeStatusOrganization(@PathVariable Long orgId,
-                                                                    @RequestParam Boolean status) {
-        return ResponseEntity.ok().build();
+                                                                    @RequestBody OrganizationDto organizationDto) {
+        return ResponseEntity.ok(organizationClient.changeStatusOrganization(orgId, organizationDto));
     }
 
     /**
-     * Админ вправе удалять активные организации
+     * Админ вправе удалять активные организации +
      *
      * @param orgId
      * @return
      */
     @DeleteMapping("/organization/{orgId}")
-    public ResponseEntity<Void> deleteOrganization(@PathVariable Long orgId) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<OrganizationDto> deleteOrganization(@PathVariable Long orgId,
+                                                              Authentication authentication) {
+        return ResponseEntity.ok(organizationClient.deleteOrganization(orgId, authentication));
     }
 
     /**
-     * Получение информации об организации
+     * Получение информации об организации +
      *
      * @param orgId
      * @return
      */
     @GetMapping("/organization/{orgId}")
-    public ResponseEntity<OrganizationDto> getOrganization(@PathVariable Long orgId) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<OrganizationDto> getOrganization(@PathVariable Long orgId,
+                                                           Authentication authentication) {
+        return ResponseEntity.ok(organizationClient.getOrganization(orgId, authentication));
     }
 
-    /**
-     * Изменение статуса продукта
-     *
-     * @param orgId
-     * @param productId
-     * @param status
-     * @return
-     */
-    @PatchMapping("/organization/{orgId}/product/{productId}/status")
-    public ResponseEntity changeStatusProduct(@PathVariable Long orgId,
-                                              @PathVariable Long productId,
-                                              @RequestParam Boolean status) {
-        return ResponseEntity.ok().build();
-    }
 }

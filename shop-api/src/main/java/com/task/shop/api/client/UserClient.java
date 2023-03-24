@@ -1,5 +1,6 @@
 package com.task.shop.api.client;
 
+import com.task.shop.api.dto.NotificationDto;
 import com.task.shop.api.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,5 +40,12 @@ public class UserClient {
         return ResponseEntity.ok(restTemplate.patchForObject(
                 uriUser + userId.toString() + "/status",
                 userDto, UserDto.class));
+    }
+
+    public NotificationDto addNotification(Long userId, NotificationDto notificationDto) {
+        return restTemplate.postForEntity(
+                uriUser + userId.toString() + "/notification",
+                notificationDto,
+                NotificationDto.class).getBody();
     }
 }

@@ -3,7 +3,7 @@ package com.task.shop.product.controller;
 import com.task.shop.product.dto.CommentDto;
 import com.task.shop.product.dto.DiscountDto;
 import com.task.shop.product.dto.ProductDto;
-import com.task.shop.product.dto.ProductListDto;
+import com.task.shop.product.dto.ProductDtoList;
 import com.task.shop.product.service.CommentService;
 import com.task.shop.product.service.DiscountService;
 import com.task.shop.product.service.ProductService;
@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<ProductListDto> getAllProduct() {
+    public ResponseEntity<ProductDtoList> getAllProduct() {
         return ResponseEntity.ok(productService.getAllProduct());
     }
 
@@ -50,17 +50,21 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{productId}/discount")
-    public ResponseEntity<DiscountDto> addDiscount(@PathVariable Long productId,
-                                                   @RequestBody DiscountDto discountDto) {
-        return ResponseEntity.ok(discountService.addDiscount(productId, discountDto));
+    @PostMapping("/discount")
+    public ResponseEntity<DiscountDto> addDiscount(@RequestBody DiscountDto discountDto) {
+        return ResponseEntity.ok(discountService.addDiscount(discountDto));
     }
 
-    @PatchMapping("/{productId}/discount/{discId}")
-    public ResponseEntity<DiscountDto> updateDiscount(@PathVariable Long productId,
-                                                      @PathVariable Long discId,
+    @PatchMapping("/discount/{discId}")
+    public ResponseEntity<DiscountDto> updateDiscount(@PathVariable Long discId,
                                                       @RequestBody DiscountDto discountDto) {
         return ResponseEntity.ok(discountService.updateDiscount(discId, discountDto));
+    }
+
+    //???????????????????????? метод в дискаунте
+    @PostMapping("/discount/products")
+    public ResponseEntity<ProductDtoList> addDiscountForProduct(@RequestBody ProductDtoList productDtoList) {
+        return ResponseEntity.ok(discountService.addDiscountForProduct(productDtoList));
     }
 
     @PostMapping("/{productId}/comment/")
@@ -69,31 +73,30 @@ public class ProductController {
         return ResponseEntity.ok(commentService.addComment(productId, commentDto));
     }
 
-    @DeleteMapping("/{productId}/comment/{commentId}/user/{userId}")
+    @DeleteMapping("/{productId}/comment/{commentId}")
     public ResponseEntity<Void> deleteCommentByUser(@PathVariable Long productId,
-                                                    @PathVariable Long commentId,
-                                                    @PathVariable Long userId) {
-        commentService.deleteComment(productId, commentId, userId);
+                                                    @PathVariable Long commentId) {
+        commentService.deleteComment(productId, commentId);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{productId}/comment/{commentId}")
     public ResponseEntity<CommentDto> updateComment(@PathVariable Long productId,
                                                     @PathVariable Long commentId,
-                                                    @RequestBody CommentDto commentDto){
+                                                    @RequestBody CommentDto commentDto) {
         return ResponseEntity.ok(commentService.updateComment(productId, commentId, commentDto));
     }
 
     @GetMapping("/{productId}/comment/{commentId}")
     public ResponseEntity<CommentDto> getComment(@PathVariable Long productId,
-                                                 @PathVariable Long commentId){
+                                                 @PathVariable Long commentId) {
         return ResponseEntity.ok(commentService.getComment(productId, commentId));
     }
 
     @PatchMapping("/{productId}/rating")
     public ResponseEntity<ProductDto> addRatingForProduct(@PathVariable Long productId,
-                                                          @RequestBody ProductDto productDto){
-        return ResponseEntity.ok(productService.addRating(productId,productDto));
+                                                          @RequestBody ProductDto productDto) {
+        return ResponseEntity.ok(productService.addRating(productId, productDto));
     }
 
 }

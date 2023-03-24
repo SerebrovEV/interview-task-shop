@@ -49,4 +49,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     public void deleteOrganization(Long id) {
         organizationRepository.deleteById(id);
     }
+
+    @Override
+    public OrganizationDto changeStatus(Long orgId, OrganizationDto organizationDto) {
+        OrganizationEntity findOrganization = findOrganizationEntity(orgId);
+        findOrganization.setActiveStatus(organizationDto.getActiveStatus());
+        return mapper.entityToDto(organizationRepository.save(findOrganization));
+    }
 }

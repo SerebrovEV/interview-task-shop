@@ -43,10 +43,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteComment(Long productId, Long commentId, Long userId) {
-        CommentEntity findComment = commentRepository.findByIdAndProduct_Id(commentId, productId).get();
-        if (findComment.getUserId().equals(userId)) {
-            commentRepository.deleteById(productId);
-        } else throw new RuntimeException();
+    public void deleteComment(Long productId, Long commentId) {
+        commentRepository.deleteById(productId);
     }
 }

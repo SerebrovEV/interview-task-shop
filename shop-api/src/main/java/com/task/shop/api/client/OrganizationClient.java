@@ -8,6 +8,7 @@ import com.thoughtworks.xstream.security.ForbiddenClassException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -29,10 +30,10 @@ public class OrganizationClient {
     }
 
 
-    public OrganizationDto getOrganization(Long userId, Long orgId, String userName) {
-        UserDto user = userClient.getUserByName(userName);
+    public OrganizationDto getOrganization(Long orgId, Authentication authentication) {
+        UserDto user = userClient.getUserByName(authentication.getName());
         OrganizationDto findOrg = restTemplate.getForObject(uriOrganization + orgId.toString(), OrganizationDto.class);
-        if (user.getId().equals(findOrg.getUserId())) {
+        if (user.getId().equals(findOrg.getUserId()) || user.getRole().equals("ADMIN")) {
             return findOrg;
         } else {
             throw new RuntimeException();
@@ -45,12 +46,25 @@ public class OrganizationClient {
     }
 
 
-    public void deleteOrganization(Long id) {
-        restTemplate.delete((uriOrganization.toString() + id.toString()));
+    public OrganizationDto deleteOrganization(Long orgId, Authentication authentication) {
+        UserDto user = userClient.getUserByName(authentication.getName());
+        OrganizationDto findOrg = restTemplate.getForObject(uriOrganization + orgId.toString(), OrganizationDto.class);
+        if(user.getId().equals(findOrg.getUserId()) || user.getRole().equals("ADMIN")){
+            restTemplate.delete((uriOrganization.toString() + orgId.toString()));
+            return findOrg;
+        }
+        throw new RuntimeException("Organization not found " + orgId);
     }
 
 
     public ResponseEntity<ProductDto> addOrganizationProduct(Long orgId, ProductDto productDto) {
-        return restTemplate.postForEntity(uriOrganization.toString() + orgId.toString() + "/product", productDto, ProductDto.class);
+        return restTemplate.postForEntity(
+                uriOrganization.toString() + orgId.toString() + "/product",
+                productDto,
+                ProductDto.class);
+    }
+
+    public OrganizationDto changeStatusOrganization(Long orgId, OrganizationDto organizationDto) {
+        return restTemplate.patchForObject(uriOrganization+orgId.toString()+"/status", organizationDto, OrganizationDto.class);
     }
 }

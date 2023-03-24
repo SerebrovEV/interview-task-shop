@@ -1,8 +1,7 @@
 package com.task.shop.product.service;
 
-import com.task.shop.product.dto.DiscountDto;
 import com.task.shop.product.dto.ProductDto;
-import com.task.shop.product.dto.ProductListDto;
+import com.task.shop.product.dto.ProductDtoList;
 
 public interface ProductService {
     ProductDto addProduct(ProductDto productDto);
@@ -13,7 +12,7 @@ public interface ProductService {
 
     void deleteProduct(Long id);
 
-    ProductListDto getAllProduct();
+    ProductDtoList getAllProduct();
 
     ProductDto addRating(Long productId, ProductDto productDto);
 }

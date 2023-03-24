@@ -1,11 +1,8 @@
 package com.task.shop.product.service.impl;
 
-import com.task.shop.product.dto.DiscountDto;
 import com.task.shop.product.dto.ProductDto;
-import com.task.shop.product.dto.ProductListDto;
-import com.task.shop.product.entity.DiscountEntity;
+import com.task.shop.product.dto.ProductDtoList;
 import com.task.shop.product.entity.ProductEntity;
-import com.task.shop.product.mapper.DiscountMapper;
 import com.task.shop.product.mapper.ProductMapper;
 import com.task.shop.product.repository.ProductRepository;
 import com.task.shop.product.service.ProductService;
@@ -13,9 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -56,8 +50,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductListDto getAllProduct() {
-        ProductListDto products = new ProductListDto();
+    public ProductDtoList getAllProduct() {
+        ProductDtoList products = new ProductDtoList();
         products.setProductsDto(productMapper.entityToDto(productRepository.findAll()));
         return products;
     }
